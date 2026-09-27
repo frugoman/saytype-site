@@ -31,3 +31,11 @@ nav.top a.home { display: flex; align-items: center; gap: 8px; color: var(--text
 nav.top img { width: 28px; height: 28px; }
 footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 0.9rem; color: var(--muted); }
 kbd { font: 0.9em ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--card); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; }
+.actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 24px 0 8px; }
+.button { display: inline-block; padding: 12px 22px; border-radius: 12px; font-weight: 600; text-decoration: none;
+  border: 1px solid var(--line); background: var(--card); color: var(--text); }
+.button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.fine { font-size: 0.9rem; color: var(--muted); }
+.buy { text-align: center; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 8px 24px 20px; }
+.price { font-size: 2rem; font-weight: 700; color: var(--text); margin: 8px 0; }
+.price .fine { display: block; font-size: 0.95rem; font-weight: 400; }
