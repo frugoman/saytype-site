@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SayType Support</title>
+<meta name="description" content="How to install and use SayType: listening modes, voice commands, snippets, AI cleanup, meetings, shortcuts and the command line.">
 <link rel="icon" href="../icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,13 +39,75 @@
   <p>Open Settings → Vocabulary, add the word, and click <strong>Teach</strong>. Say the word three times, and SayType learns how it's misheard and fixes it from then on.</p>
 
   <h2>Shortcuts</h2>
+  <table class="keys">
+    <thead><tr><th scope="col">Keys</th><th scope="col">What it does</th></tr></thead>
+    <tbody>
+      <tr><td><kbd>⌃⌥D</kbd></td><td>Turn dictation on or off</td></tr>
+      <tr><td><kbd>⌃⌥S</kbd></td><td>Read the selected text aloud (press again to stop)</td></tr>
+      <tr><td><kbd>⌃⌥Space</kbd></td><td>Push-to-talk: hold to talk, release to type</td></tr>
+      <tr><td><kbd>⌃⌥E</kbd></td><td>Edit the selected text by voice</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Listening modes</h2>
+  <p>In Settings, choose how SayType listens:</p>
   <ul>
-    <li><kbd>⌃⌥D</kbd> turns dictation on or off</li>
-    <li><kbd>⌃⌥S</kbd> reads the selected text aloud (press again to stop)</li>
+    <li><strong>Hands-free</strong> (the default). It listens while a text field has focus and types when you pause.</li>
+    <li><strong>Push-to-talk.</strong> Hold <kbd>⌃⌥Space</kbd> while you talk and release to type. Good in noisy rooms or when you don't want it listening on its own.</li>
+    <li><strong>Toggle.</strong> Press the shortcut to start, press it again to stop.</li>
   </ul>
+  <p>A small recording pill shows when SayType is listening. You can also turn on start and stop sounds.</p>
+
+  <h2>Voice commands</h2>
+  <p>Say these on their own, as a separate phrase:</p>
+  <ul>
+    <li><strong>"new line"</strong> and <strong>"new paragraph"</strong></li>
+    <li><strong>"scratch that"</strong> deletes what was just typed</li>
+    <li><strong>"undo that"</strong></li>
+    <li><strong>"select all"</strong></li>
+    <li><strong>"press enter"</strong></li>
+  </ul>
+  <p>You can also turn on spoken punctuation, so "comma", "question mark" and "open paren" type the symbol.</p>
+
+  <h2>Snippets</h2>
+  <p>In Settings, add a phrase and the text it should type. Say the phrase and the whole block is typed. In the text you can use <code>{date}</code>, <code>{time}</code> and <code>{clipboard}</code>, which are filled in when it's typed.</p>
+
+  <h2>Per-app profiles</h2>
+  <p>A profile changes how SayType behaves in one app. You can set the pause length, language, tone (casual, professional, code or literal), whether to remove the trailing period, and extra vocabulary. SayType suggests profiles for apps like Slack, Mail, Terminal, Xcode, VS Code and Messages.</p>
+
+  <h2>Transcript history</h2>
+  <p>Open Settings → History to search what you dictated, copy an item, or type it again. The menu bar shows your recent items. History is stored as text on your Mac, never as audio. You can turn it off or clear it in the same place.</p>
+
+  <h2>Set up AI cleanup</h2>
+  <p>AI cleanup is off by default. It removes filler words and fixes punctuation, and can also polish or translate what you say. Turn it on in Settings and choose a backend. Nothing leaves your Mac either way.</p>
+  <p><strong>Apple's on-device model.</strong> On macOS 26 or later, pick Apple's model. There is nothing to set up.</p>
+  <p><strong>A local server.</strong> Any server with an OpenAI-compatible API works, including Ollama, LM Studio, llama.cpp and mlx_lm.server. With <a href="https://ollama.com">Ollama</a>, install a model, then start the server:</p>
+  <pre>ollama serve</pre>
+  <p>In SayType's AI settings, set the server address to <code>http://127.0.0.1:11434</code> and choose the model.</p>
+
+  <h2>Edit text by voice</h2>
+  <p>Select some text, press <kbd>⌃⌥E</kbd> and say what you want: "make this shorter", "translate to Spanish" or "fix the grammar". The selection is replaced. This needs an AI backend, set up as above.</p>
+
+  <h2>Languages and translation</h2>
+  <p>SayType understands about 30 languages. Choose one in Settings, or set it per app in a profile. There are two speech engines: Whisper, and Parakeet v3 (25 European languages, very fast; it downloads its own model). To get English out of another language, turn on <strong>Translate to English</strong> (Whisper). To get another language out, set an <strong>Output language</strong>, which uses the AI backend.</p>
+
+  <h2>Transcribe a file or record a meeting</h2>
+  <p>From the SayType menu, choose <strong>Transcribe a file…</strong> and pick any audio or video file. You can export the result as .txt, .srt, .vtt or .md.</p>
+  <p>Choose <strong>Record a meeting</strong> to capture your Mac's audio and your microphone. The transcript labels who spoke as <strong>You</strong> or <strong>Others</strong>, and the AI backend can add a summary with action items. Meeting recording needs one more permission: open <strong>System Settings → Privacy &amp; Security → Screen &amp; System Audio Recording</strong> and turn on SayType. Dictation doesn't need it. The audio isn't saved, only the transcript if you save it.</p>
+
+  <h2>Command line and automation</h2>
+  <p>Homebrew installs a <code>saytype</code> command:</p>
+  <pre>saytype toggle
+saytype speak "Build finished"
+saytype transcribe ~/Recordings/interview.m4a
+saytype last | pbcopy
+saytype help</pre>
+  <p><code>saytype status</code> prints one word: listening, idle, off, loading, speaking or recording.</p>
+  <p>The same actions work as <code>saytype://</code> links, for example <code>open -g "saytype://dictation/toggle"</code>. In the Shortcuts app, search for SayType to find actions that toggle, start and stop dictation, speak text, get the last transcript and transcribe an audio file. There are also script commands for Raycast. See the <a href="https://github.com/frugoman/saytype/tree/main/integrations">integrations guide</a>.</p>
+
 
   <h2>Is it really free?</h2>
-  <p>Yes. There's no trial, account or paid version. If SayType is useful to you, you can <a href="https://buymeacoffee.com/frugoman">buy me a coffee</a>.</p>
+  <p>Yes. There's no trial, account or paid version, and the code is <a href="https://github.com/frugoman/saytype">open source</a> (MIT). If SayType is useful to you, you can <a href="https://buymeacoffee.com/frugoman">buy me a coffee</a>.</p>
 
   <h2>Contact</h2>
   <p>Report a problem or ask a question by <a href="https://github.com/frugoman/saytype-site/issues">opening an issue on GitHub</a>.</p>

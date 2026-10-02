@@ -58,3 +58,10 @@ kbd { background: var(--sheet); border: 1px solid var(--rule); border-bottom-wid
   .doc { padding: 16px 16px 64px; }
   .site-footer { padding: 24px 16px 40px; }
 }
+
+/* Small tables on document pages */
+.doc table { width: 100%; border-collapse: collapse; margin: 8px 0 0; font-size: 17px; }
+.doc th { text-align: left; font-weight: 600; font-size: 14px; color: var(--ink-3); padding: 8px 12px 8px 0; border-bottom: 1px solid var(--rule); }
+.doc td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); color: var(--ink-2); vertical-align: top; }
+.doc td:first-child { white-space: nowrap; }
+.doc code { overflow-wrap: anywhere; }

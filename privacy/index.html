@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SayType Privacy Policy</title>
+<meta name="description" content="SayType runs on your Mac. It collects no data, has no accounts, and keeps your history only on your computer.">
 <link rel="icon" href="../icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,26 +19,42 @@
 </nav>
 <main class="doc">
   <h1>Privacy Policy</h1>
-  <p class="updated">Last updated: October 2, 2026</p>
+  <p class="updated">Last updated: October 3, 2026</p>
 
-  <p><strong>Short version: SayType does not collect, store, or share your voice, your text, or what you do on your Mac.</strong> Speech recognition happens entirely on your Mac. The only things SayType downloads are the speech and voice models, described below.</p>
+  <p><strong>Short version: SayType does not collect, store, or share your voice, your text, or what you do on your Mac.</strong> Speech recognition happens entirely on your Mac. Anything SayType keeps stays in a folder on your computer. The only things it downloads are the speech and voice models, described below.</p>
 
   <h2>Your voice</h2>
-  <p>While a text field has focus, SayType listens through your microphone and turns speech into text <strong>on your Mac</strong>, using a speech model stored on your computer. Audio is kept in memory only long enough to transcribe it, then discarded. It is never saved to disk and never sent to us or to anyone else.</p>
+  <p>While a text field has focus (or while you use push-to-talk, toggle or a manual recording), SayType listens through your microphone and turns speech into text <strong>on your Mac</strong>, using a speech model stored on your computer. Audio is kept in memory only long enough to transcribe it, then discarded. It is never saved to disk and never sent to us or to anyone else.</p>
+
+  <h2>Transcript history</h2>
+  <p>SayType keeps a history of what you dictated so you can search it, copy it or type it again. <strong>It stores text only, never audio.</strong> The history lives on your Mac, in SayType's folder in Library › Application Support, and is never uploaded. You can turn history off in Settings → History, and you can clear it at any time. The menu bar shows your most recent items, and SayType keeps the last transcript in a small text file in the same folder so the <code>saytype last</code> command can print it.</p>
+
+  <h2>Files and meetings</h2>
+  <p>When you transcribe a file, SayType reads it on your Mac and turns it into text. The file is not copied or uploaded.</p>
+  <p>To record a meeting, SayType uses the macOS <strong>Screen &amp; System Audio Recording</strong> permission to capture the audio your Mac plays, together with your microphone. It asks for this permission only if you use meeting recording. It captures audio, not your screen. The audio stays in memory while it is transcribed and is not saved. Only the transcript text (and the summary, if you ask for one) is kept, and only if you save it.</p>
+
+  <h2>AI cleanup and voice-edit</h2>
+  <p>These features are off until you turn them on. When on, your text is processed by one of two things: Apple's on-device model on your Mac, or a server you run yourself, at the address you enter in Settings (for example Ollama or LM Studio at <code>127.0.0.1</code>). Your text is sent only to that address. SayType has no AI service of its own, and nothing is sent to us.</p>
 
   <h2>Accessibility access</h2>
-  <p>SayType uses the macOS Accessibility permission for two things only: to tell whether the focused element is a text field (and whether it's a password field, where SayType never listens), and to insert the text you dictated. It doesn't record your screen, log your keystrokes, or keep the contents of other apps. When you ask it to read text aloud, it reads your current selection once to speak it.</p>
+  <p>SayType uses the macOS Accessibility permission for two things only: to tell whether the focused element is a text field (and whether it's a password field, where SayType never listens), and to insert the text you dictated. It doesn't record your screen, log your keystrokes, or keep the contents of other apps. When you ask it to read text aloud or edit it by voice, it reads your current selection once, for that request.</p>
 
   <h2>Your vocabulary and settings</h2>
-  <p>The words you teach SayType and your preferences are stored locally on your Mac, in SayType's folder in Library › Application Support. They are never uploaded.</p>
+  <p>The words you teach SayType, your snippets, your per-app profiles and your preferences are stored locally on your Mac, in SayType's folder in Library › Application Support. They are never uploaded.</p>
+
+  <h2>Automation</h2>
+  <p>The <code>saytype</code> command, <code>saytype://</code> links, Shortcuts actions and Raycast scripts all work on your Mac and only talk to the SayType app running there. They send nothing over the network.</p>
 
   <h2>Network use</h2>
   <ul>
-    <li><strong>Model downloads.</strong> The first time you use a speech or voice model, SayType downloads it from Hugging Face (huggingface.co). As with any download, Hugging Face can see your IP address. No audio, text, or personal information is sent.</li>
+    <li><strong>Model downloads.</strong> The first time you use a speech or voice model, including the Parakeet model if you choose it, SayType downloads it from Hugging Face (huggingface.co). As with any download, Hugging Face can see your IP address. No audio, text, or personal information is sent.</li>
     <li><strong>Installing and updating.</strong> SayType is installed and updated with Homebrew, which downloads it from GitHub (github.com). GitHub can see your IP address. SayType itself doesn't check for updates.</li>
-    <li><strong>Optional local servers.</strong> If you choose to connect SayType to your own speech server, audio or text is sent only to the address you enter, which is normally a server running on your own Mac.</li>
+    <li><strong>Optional local servers.</strong> If you choose to connect SayType to your own speech or AI server, audio or text is sent only to the address you enter, which is normally a server running on your own Mac.</li>
   </ul>
   <p>SayType contains no analytics, advertising, tracking, or third-party SDKs that collect data. It has no accounts or sign-in.</p>
+
+  <h2>Open source</h2>
+  <p>SayType's code is public under the MIT license at <a href="https://github.com/frugoman/saytype">github.com/frugoman/saytype</a>. You don't have to take this policy on trust: you can read the code, or build the app yourself.</p>
 
   <h2>Children</h2>
   <p>SayType does not collect personal information from anyone, including children.</p>
