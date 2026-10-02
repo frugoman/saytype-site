@@ -5,12 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SayType Support</title>
 <link rel="icon" href="../icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-<main>
-  <nav class="top"><a class="home" href="../"><img src="../icon.png" alt="">SayType</a><a href="../privacy/">Privacy</a></nav>
+<nav class="top">
+  <a class="home" href="../"><img src="../icon.png" alt="" width="30" height="30">SayType</a>
+  <a href="../support/">Support</a>
+  <a href="../privacy/">Privacy</a>
+</nav>
+<main class="doc">
   <h1>Support</h1>
+
+  <h2>Install</h2>
+  <p>Install SayType with <a href="https://brew.sh">Homebrew</a>:</p>
+  <pre>brew install --cask frugoman/tap/saytype</pre>
+  <p>To update to the latest version:</p>
+  <pre>brew upgrade --cask saytype</pre>
 
   <h2>Getting started</h2>
   <p>Open SayType and follow the setup window. It asks for <strong>Microphone</strong> and <strong>Accessibility</strong> access and downloads the speech model (about 630 MB, one time). Then click into any text field and talk. When you pause, the text is typed.</p>
@@ -30,10 +43,14 @@
     <li><kbd>⌃⌥S</kbd> reads the selected text aloud (press again to stop)</li>
   </ul>
 
+  <h2>Is it really free?</h2>
+  <p>Yes. There's no trial, account or paid version. If SayType is useful to you, you can <a href="https://buymeacoffee.com/frugoman">buy me a coffee</a>.</p>
+
   <h2>Contact</h2>
   <p>Report a problem or ask a question by <a href="https://github.com/frugoman/saytype-site/issues">opening an issue on GitHub</a>.</p>
-
-  <footer>© 2026 Nicolas Frugoni · <a href="../privacy/">Privacy Policy</a></footer>
 </main>
+<footer class="site-footer">
+  <span>Made by <a href="https://github.com/frugoman">@frugoman</a>. SayType is free; <a href="https://buymeacoffee.com/frugoman">buy me a coffee</a> if it helps.</span>
+</footer>
 </body>
 </html>

@@ -3,38 +3,380 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SayType</title>
-<meta name="description" content="Hands-free, fully local dictation for Mac. Click a text field and just talk.">
+<title>SayType: click a text field, just talk</title>
+<meta name="description" content="Free, hands-free dictation for Mac that runs entirely on your computer. Click into any text field and talk; when you pause, your words are typed.">
+<meta property="og:title" content="SayType: click a text field, just talk">
+<meta property="og:description" content="Free, fully local dictation for Mac. No key to hold, no cloud, no subscription.">
+<meta property="og:image" content="https://frugoman.github.io/saytype-site/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F5F4FB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F0D1F" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* Hero */
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: center; padding: 40px 0 88px; }
+  h1 { font-size: clamp(50px, 7vw, 92px); line-height: .95; letter-spacing: -.03em; font-weight: 850; margin: 0 0 24px;
+       font-variation-settings: "CASL" 1, "slnt" 0; }
+  .lede { font-size: clamp(18px, 1.9vw, 21px); color: var(--ink-2); max-width: 29em; margin: 0 0 32px; }
+  .install { display: flex; align-items: center; gap: 10px; min-width: 0; max-width: 520px; background: var(--sheet);
+             border: 1px solid var(--rule); border-radius: 16px; padding: 7px 7px 7px 18px; box-shadow: var(--shadow); }
+  .install code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; scrollbar-width: none; font-size: 14.5px; }
+  .install code::before { content: "$ "; color: var(--ink-3); }
+  .btn { font: 700 15.5px var(--font); border-radius: 11px; padding: 10px 18px; cursor: pointer; border: 0; text-decoration: none;
+         display: inline-flex; align-items: center; gap: 8px; transition: transform .12s; }
+  .btn:active { transform: scale(.97); }
+  .btn.ink { background: var(--ink); color: var(--paper); }
+  .btn.mint { background: var(--mint); color: #062F25; }
+  .btn.mint:hover { color: #062F25; }
+  .fine { margin-top: 16px; font-size: 15px; color: var(--ink-3); }
+  .fine a { color: var(--ink-2); }
+
+  /* The live dictation demo */
+  .stage { background: var(--indigo); border-radius: 30px; padding: clamp(22px, 4vw, 44px); position: relative; overflow: hidden; color: #fff; }
+  .stage::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+                  background: radial-gradient(circle at 85% 20%, rgba(59,232,182,.18), transparent 45%); }
+  .scenes { display: flex; gap: 6px; margin-bottom: 18px; position: relative; z-index: 1; }
+  .scenes span { font-size: 13px; padding: 4px 11px; border-radius: 999px; color: rgba(255,255,255,.62); transition: background .3s, color .3s; }
+  .scenes span.on { background: rgba(255,255,255,.14); color: #fff; }
+  .field { position: relative; z-index: 1; background: var(--sheet); color: var(--ink); border-radius: 18px; padding: 16px 20px 22px;
+           box-shadow: 0 30px 60px -25px rgba(5,3,40,.6); min-height: 196px; }
+  .field-head { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--ink-3); border-bottom: 1px solid var(--rule); padding-bottom: 12px; margin-bottom: 16px; }
+  .field-head b { color: var(--ink); font-weight: 650; }
+  .field-head .where { font-variation-settings: "MONO" 1; font-size: 12.5px; }
+  .listen { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--mint-ink); opacity: 0; transition: opacity .3s; }
+  .listen::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 3px color-mix(in srgb, var(--mint) 30%, transparent); }
+  .listen.on { opacity: 1; }
+  .line { font-size: clamp(19px, 2.2vw, 24px); line-height: 1.45; font-weight: 450; min-height: 3em; }
+  .w { display: none; color: var(--mint-ink); font-variation-settings: "CASL" 1, "slnt" -10, "wght" 520;
+       transition: color .6s, font-variation-settings .7s ease-out; }
+  .w.in { display: inline-block; animation: word-in .28s ease-out; }
+  @keyframes word-in { from { opacity: 0; } }
+  .w.set { color: var(--ink); font-variation-settings: "CASL" 0, "slnt" 0, "wght" 450; }
+  .w.misheard.set { text-decoration: line-through 2px; text-decoration-color: #E2455B; color: var(--ink-3); }
+  .w.fixed { color: var(--ink); font-variation-settings: "MONO" 1, "CASL" 0, "wght" 600;
+             background: color-mix(in srgb, var(--mint) 28%, transparent); border-radius: 5px; padding: 0 3px; text-decoration: none; }
+  .caret { display: inline-block; width: 3px; height: 1.15em; background: var(--mint); border-radius: 2px; vertical-align: -.2em; margin-left: 2px; animation: blink 1.05s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .voice { opacity: 0; transition: opacity .25s; display: inline-flex; align-items: center; gap: 3px; height: 1.2em; vertical-align: -.25em; margin-left: 10px; }
+  .voice.on { opacity: 1; }
+  .voice i { width: 4px; height: 3px; border-radius: 2px; background: var(--mint); transition: height .09s linear; display: block; }
+  .ring { width: 18px; height: 18px; vertical-align: -.2em; margin-left: 8px; opacity: 0; transition: opacity .2s; }
+  .ring.on { opacity: 1; }
+  .ring circle { fill: none; stroke-width: 3; }
+  .ring .track { stroke: var(--rule); }
+  .ring .fill { stroke: var(--mint); stroke-dasharray: 44; stroke-dashoffset: 44; transform: rotate(-90deg); transform-origin: center; }
+  .note { position: relative; z-index: 1; margin: 16px 2px 0; font-size: 14px; color: rgba(255,255,255,.8); min-height: 1.5em; opacity: 0; transition: opacity .4s; }
+  .note.on { opacity: 1; }
+  .note code { color: #fff; }
+  .replay { position: absolute; z-index: 2; right: 20px; top: 20px; font: 600 13px var(--font); color: #fff; background: rgba(255,255,255,.14);
+            border: 0; border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+
+  /* Sections */
+  section { padding: 112px 0 0; }
+  h2 { font-size: clamp(36px, 4.8vw, 60px); line-height: 1; letter-spacing: -.025em; font-weight: 800; margin: 0 0 18px; max-width: 15ch;
+       font-variation-settings: "CASL" 1; }
+  .sub { color: var(--ink-2); max-width: 34em; margin: 0; font-size: 19px; }
+
+  /* Steps along a waveform: this is a real sequence. */
+  .steps { list-style: none; padding: 0; margin: 56px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; position: relative; }
+  .steps::before { content: ""; position: absolute; left: 0; right: 0; top: 14px; height: 30px; transform: translateY(-50%);
+                   background: repeating-linear-gradient(90deg, var(--rule) 0 4px, transparent 4px 9px); -webkit-mask: linear-gradient(#000 0 0) center / 100% 2px no-repeat;
+                   mask: linear-gradient(#000 0 0) center / 100% 2px no-repeat; }
+  .steps li { position: relative; padding-top: 48px; }
+  .steps li::before { content: attr(data-n); position: absolute; top: 0; left: 0; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+                      background: var(--sheet); border: 2px solid var(--indigo-2); color: var(--indigo-2); font-weight: 750; font-size: 14px; }
+  .steps li:last-child::before { background: var(--mint); border-color: var(--mint); color: #062F25; }
+  .steps h3 { font-size: 21px; margin: 0 0 6px; font-weight: 700; }
+  .steps p { margin: 0; color: var(--ink-2); font-size: 16.5px; }
+
+  .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; align-items: center; }
+  .vocab { background: var(--sheet); border: 1px solid var(--rule); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; }
+  .vocab table { width: 100%; border-collapse: collapse; font-size: 16px; }
+  .vocab th { text-align: left; font-weight: 600; font-size: 13.5px; color: var(--ink-3); padding: 14px 22px; border-bottom: 1px solid var(--rule); }
+  .vocab td { padding: 14px 22px; border-bottom: 1px solid var(--rule); }
+  .vocab tr:last-child td { border-bottom: 0; }
+  .vocab .heard { color: var(--ink-3); font-variation-settings: "CASL" 1, "slnt" -10; text-decoration: line-through; text-decoration-color: #E2455B; }
+  .vocab .typed { font-variation-settings: "MONO" 1; font-weight: 600; }
+  .vocab .typed span { background: color-mix(in srgb, var(--mint) 26%, transparent); border-radius: 5px; padding: 1px 5px; }
+
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; margin-top: 44px; border-top: 2px solid var(--ink); }
+  .pair > div { padding: 26px 32px 0 0; }
+  .pair > div + div { padding-left: 32px; border-left: 1px solid var(--rule); }
+  .pair h3 { font-size: 24px; margin: 0 0 8px; font-weight: 700; font-variation-settings: "CASL" .6; }
+  .pair p { margin: 0 0 10px; color: var(--ink-2); font-size: 16.5px; }
+
+  .private { list-style: none; padding: 0; margin: 32px 0 0; display: grid; gap: 14px; max-width: 40em; }
+  .private li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; color: var(--ink-2); font-size: 17.5px; }
+  .private li::before { content: ""; width: 12px; height: 12px; margin-top: 8px; border-radius: 50%; background: var(--mint); }
+  .private b { color: var(--ink); font-weight: 650; }
+
+  .free { margin-top: 120px; background: var(--ink); color: var(--paper); border-radius: 30px; padding: clamp(32px, 6vw, 72px);
+          display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 48px; align-items: end; }
+  .free h2 { color: var(--paper); font-size: clamp(44px, 6.4vw, 84px); max-width: none; margin: 0; }
+  .free p { color: color-mix(in srgb, var(--paper) 78%, var(--ink)); margin: 0 0 24px; font-size: 18.5px; }
+  .free .install { background: color-mix(in srgb, var(--paper) 8%, var(--ink)); border-color: color-mix(in srgb, var(--paper) 18%, var(--ink)); box-shadow: none; color: var(--paper); margin-bottom: 18px; }
+  .free .btn.ink { background: var(--paper); color: var(--ink); }
+  .coffee { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 15.5px; color: color-mix(in srgb, var(--paper) 70%, var(--ink)); }
+
+  @media (max-width: 920px) {
+    .hero { grid-template-columns: minmax(0, 1fr); gap: 44px; padding-top: 20px; }
+    .split, .free { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+    .steps { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .steps::before { left: 14px; right: auto; top: 0; bottom: 0; width: 30px; height: auto; transform: translateX(-50%);
+                     background: repeating-linear-gradient(180deg, var(--rule) 0 4px, transparent 4px 9px);
+                     -webkit-mask: linear-gradient(#000 0 0) center / 2px 100% no-repeat; mask: linear-gradient(#000 0 0) center / 2px 100% no-repeat; }
+    .steps li { padding: 2px 0 0 50px; }
+    .pair { grid-template-columns: minmax(0, 1fr); }
+    .pair > div, .pair > div + div { padding: 24px 0 0; border-left: 0; }
+    .top .hide-sm { display: none; }
+  }
+  @media (max-width: 520px) {
+    .wrap { padding: 0 16px; }
+    .install { padding-left: 12px; }
+    .install code { font-size: 13px; }
+    .field { padding: 14px 16px 18px; min-height: 210px; }
+    .field-head .where { display: none; }
+    .free { border-radius: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .w, .listen, .note, .ring, .voice i { transition: none; animation: none; }
+    .caret { animation: none; }
+  }
+</style>
 </head>
 <body>
-<main>
-  <nav class="top"><a class="home" href="./"><img src="icon.png" alt="">SayType</a><a href="support/">Support</a><a href="privacy/">Privacy</a></nav>
+<nav class="top">
+  <a class="home" href="./"><img src="icon.png" alt="" width="30" height="30">SayType</a>
+  <a class="hide-sm" href="#how">How it works</a>
+  <a href="support/">Support</a>
+  <a class="hide-sm" href="privacy/">Privacy</a>
+</nav>
+
+<main class="wrap">
   <header class="hero">
-    <img src="icon.png" alt="SayType icon">
-    <h1>Click a text field. Just talk.</h1>
-    <p class="lead">SayType is hands-free dictation for your Mac. There's no key to hold. When you pause, your words are typed wherever your cursor is.</p>
-    <p class="actions">
-      <a class="button primary" href="https://github.com/frugoman/saytype-site/releases/latest/download/SayType.dmg">Download free trial</a>
-      <a class="button" href="#buy">Buy SayType</a>
-    </p>
-    <p class="fine">Free for 14 days · macOS 14 or later · Apple silicon recommended</p>
+    <div>
+      <h1>Click a text field. Just talk.</h1>
+      <p class="lede">SayType is dictation for your Mac with no key to hold. It listens while a text field has focus, and when you pause, your words are typed right where your cursor is. It all runs on your Mac.</p>
+      <div class="install">
+        <code id="brew">brew install --cask frugoman/tap/saytype</code>
+        <button class="btn ink copy" type="button" data-copy="brew">Copy</button>
+      </div>
+      <p class="fine">Free. No trial, no account, no subscription. macOS 14 or later, Apple silicon recommended.</p>
+    </div>
+
+    <div class="stage" role="img" aria-label="Animation: dictating into Slack, a git commit message and an email. While you talk a waveform pulses at the cursor; when you pause, the words are typed. In the commit, the misheard 'cube cuttle' is corrected to kubectl.">
+      <div class="scenes" aria-hidden="true"><span>Slack</span><span>Terminal</span><span>Mail</span></div>
+      <div class="field" aria-hidden="true">
+        <div class="field-head"><b class="app"></b><span class="where"></span><span class="listen">Listening</span></div>
+        <div class="line"><span class="words"></span><span class="caret"></span><span class="voice"></span><svg class="ring" viewBox="0 0 18 18"><circle class="track" cx="9" cy="9" r="7"/><circle class="fill" cx="9" cy="9" r="7"/></svg></div>
+      </div>
+      <p class="note" aria-hidden="true"></p>
+    </div>
   </header>
-  <div class="cards">
-    <div class="card"><h3>100% on your Mac</h3><p>Speech recognition runs on-device. Your voice never leaves your computer.</p></div>
-    <div class="card"><h3>Always ready</h3><p>Listens only while a text field is focused, and never in password fields.</p></div>
-    <div class="card"><h3>Knows your words</h3><p>Teach it project names and technical terms, and it spells them right.</p></div>
-    <div class="card"><h3>Reads to you, too</h3><p>Select any text and press <kbd>⌃⌥S</kbd> to hear it aloud.</p></div>
-  </div>
-  <section id="buy" class="buy">
-    <h2>Buy once, use it forever</h2>
-    <p class="price"><span data-price>$12</span> <span class="fine">one-time purchase · free updates · use on 2 Macs</span></p>
-    <p><a class="button primary" data-checkout href="https://saytype.lemonsqueezy.com/buy/REPLACE_WITH_CHECKOUT_ID">Buy SayType</a></p>
-    <p class="fine">You'll get a license key by email. In SayType, open Settings → License and paste it in. Payments are handled securely by Lemon Squeezy.</p>
+
+  <section id="how">
+    <h2>No button. Just a pause.</h2>
+    <p class="sub">SayType watches which field has focus, the same way your screen reader would. The microphone only turns on when you could type something, and it's never on in password fields.</p>
+    <ol class="steps">
+      <li data-n="1"><h3>Click a field</h3><p>Any app: Slack, Mail, your editor, a browser form.</p></li>
+      <li data-n="2"><h3>Talk</h3><p>It adapts to your room's noise, so a fan or a café doesn't trigger it.</p></li>
+      <li data-n="3"><h3>Pause</h3><p>After a short pause (0.8 s by default) the sentence is done.</p></li>
+      <li data-n="4"><h3>It's typed</h3><p>Inserted directly. Your clipboard is left alone.</p></li>
+    </ol>
   </section>
 
-  <footer>© 2026 Nicolas Frugoni · <a href="privacy/">Privacy Policy</a> · <a href="support/">Support</a></footer>
+  <section>
+    <div class="split">
+      <div>
+        <h2>It learns your words.</h2>
+        <p class="sub">Add project names and technical terms in Settings. Press Teach and say a word three times: SayType learns how it gets misheard and fixes it from then on.</p>
+      </div>
+      <div class="vocab">
+        <table>
+          <thead><tr><th scope="col">You said</th><th scope="col">Speech model heard</th><th scope="col">SayType types</th></tr></thead>
+          <tbody>
+            <tr><td>kubectl</td><td class="heard">cube cuttle</td><td class="typed"><span>kubectl</span></td></tr>
+            <tr><td>Next.js</td><td class="heard">next dot js</td><td class="typed"><span>Next.js</span></td></tr>
+            <tr><td>Postgres</td><td class="heard">post gress</td><td class="typed"><span>Postgres</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>It talks back, too.</h2>
+    <div class="pair">
+      <div>
+        <h3>Read anything aloud</h3>
+        <p>Select text in any app and press <kbd>⌃⌥S</kbd> to hear it. Press again to stop. Use a macOS voice, or download a natural on-device voice.</p>
+        <p><kbd>⌃⌥D</kbd> turns dictation on and off.</p>
+      </div>
+      <div>
+        <h3>Bring your own model</h3>
+        <p>It ships with Whisper Large v3 Turbo, running on your Mac's Neural Engine. Prefer Parakeet, whisper.cpp or MLX? Run it as a local server and point SayType at it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy">
+    <h2>Your voice stays on your Mac.</h2>
+    <ul class="private">
+      <li><span><b>Transcribed on-device.</b> Audio is kept in memory just long enough to turn into text, then thrown away.</span></li>
+      <li><span><b>Nothing to sign up for.</b> No account, no server, no analytics.</span></li>
+      <li><span><b>One download.</b> The speech model (about 630 MB) comes from Hugging Face once, the first time you open SayType.</span></li>
+    </ul>
+    <p class="fine">Read the full <a href="privacy/">privacy policy</a>.</p>
+  </section>
+
+  <div class="free">
+    <h2>Free. Really.</h2>
+    <div>
+      <p>No trial, no pro tier, no licence key. Install it with Homebrew and update with <code>brew upgrade --cask saytype</code>.</p>
+      <div class="install">
+        <code id="brew2">brew install --cask frugoman/tap/saytype</code>
+        <button class="btn ink copy" type="button" data-copy="brew2">Copy</button>
+      </div>
+      <div class="coffee">
+        <a class="btn mint" href="https://buymeacoffee.com/frugoman">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17M8 2.5c0 1 .8 1.3.8 2.3M12 2.5c0 1 .8 1.3.8 2.3"/></svg>
+          Buy me a coffee
+        </a>
+        <span>If SayType saves you some typing.</span>
+      </div>
+    </div>
+  </div>
 </main>
+
+<footer class="site-footer">
+  <span>Made by <a href="https://github.com/frugoman">@frugoman</a>. <a href="privacy/">Privacy</a>. <a href="support/">Support</a>.</span>
+  <span>Also by me: <a href="https://frugoman.github.io/impact-capture/">Impact Capture</a> and <a href="https://frugoman.github.io/meeting-flash/">MeetingFlash</a>.</span>
+</footer>
+
+<script>
+  document.querySelectorAll("button.copy").forEach(button => {
+    button.addEventListener("click", async () => {
+      const text = document.getElementById(button.dataset.copy).textContent;
+      try { await navigator.clipboard.writeText(text); button.textContent = "Copied"; }
+      catch { button.textContent = "Select & copy"; }
+      setTimeout(() => (button.textContent = "Copy"), 1600);
+    });
+  });
+
+  // Hero: focus a field, talk (waveform at the caret), pause (ring fills), and the words are typed.
+  (() => {
+    const scenes = [
+      { app: "Slack", where: "#platform", words: ["Deploy", "looks", "good", "on", "staging.", "I'll", "roll", "it", "out", "after", "lunch."] },
+      { app: "Terminal", where: "git commit -m", words: ["Fix", "the", "race", "in", "the", { heard: "cube cuttle", typed: "kubectl" }, "config", "loader"],
+        note: 'Heard "cube cuttle". Your vocabulary says <code>kubectl</code>.' },
+      { app: "Mail", where: "To: Dana", words: ["Thanks", "Dana,", "Thursday", "at", "ten", "works", "for", "me."] },
+    ];
+    const stage = document.querySelector(".stage");
+    const tabs = [...stage.querySelectorAll(".scenes span")];
+    const app = stage.querySelector(".app"), where = stage.querySelector(".where");
+    const listen = stage.querySelector(".listen"), wordsEl = stage.querySelector(".words");
+    const voice = stage.querySelector(".voice"), ring = stage.querySelector(".ring"), ringFill = ring.querySelector(".fill");
+    const note = stage.querySelector(".note");
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const bars = Array.from({ length: 13 }, () => voice.appendChild(document.createElement("i")));
+    let run = 0, visible = true, resume = null;
+
+    const sleep = (ms, id) => new Promise(done => {
+      let elapsed = 0, last = performance.now();
+      const tick = () => {
+        if (id !== run) return;
+        const now = performance.now();
+        if (!visible) { resume = () => { last = performance.now(); tick(); }; return; }
+        elapsed += now - last; last = now;
+        if (elapsed >= ms) done(); else setTimeout(tick, Math.min(ms - elapsed, 40));
+      };
+      setTimeout(tick, Math.min(ms, 40));
+    });
+
+    function show(scene, index) {
+      tabs.forEach((tab, i) => tab.classList.toggle("on", i === index));
+      app.textContent = scene.app; where.textContent = scene.where;
+      wordsEl.replaceChildren(); note.classList.remove("on"); note.innerHTML = scene.note || "";
+      return scene.words.map((word, i) => {
+        const span = document.createElement("span");
+        span.className = "w";
+        if (typeof word === "object") { span.textContent = word.heard; span.classList.add("misheard"); span.dataset.typed = word.typed; }
+        else span.textContent = word;
+        if (i < scene.words.length - 1) span.style.marginRight = ".28em";
+        wordsEl.append(span);
+        return span;
+      });
+    }
+
+    async function talk(ms, id) {
+      voice.classList.add("on");
+      const start = performance.now();
+      while (performance.now() - start < ms) {
+        const t = (performance.now() - start) / ms;
+        bars.forEach((bar, i) => {
+          const envelope = Math.sin(Math.PI * Math.min(1, t * 1.15)) * (0.55 + 0.45 * Math.sin(i * 0.9 + t * 30));
+          bar.style.height = Math.max(3, Math.round(4 + Math.random() * 18 * envelope)) + "px";
+        });
+        await sleep(90, id);
+      }
+      bars.forEach(bar => (bar.style.height = "3px"));
+      voice.classList.remove("on");
+    }
+
+    async function play() {
+      const id = ++run;
+      if (reduced) {
+        const spans = show(scenes[1], 1);
+        spans.forEach(s => { s.classList.add("in", "set"); if (s.dataset.typed) { s.textContent = s.dataset.typed; s.classList.add("fixed"); } });
+        listen.classList.add("on"); note.classList.add("on");
+        return;
+      }
+      for (let i = 0; i < scenes.length; i++) {
+        const scene = scenes[i];
+        const spans = show(scene, i);
+        listen.classList.remove("on");
+        await sleep(600, id);
+        listen.classList.add("on");
+        await sleep(450, id);
+        await talk(scene.words.length * 240 + 500, id);
+        ring.classList.add("on");
+        ringFill.animate([{ strokeDashoffset: 44 }, { strokeDashoffset: 0 }], { duration: 800, fill: "forwards" });
+        await sleep(850, id);
+        ring.classList.remove("on");
+        for (const span of spans) {
+          span.classList.add("in");
+          requestAnimationFrame(() => setTimeout(() => span.classList.add("set"), 160));
+          await sleep(95, id);
+        }
+        const fix = spans.find(s => s.dataset.typed);
+        if (fix) {
+          await sleep(700, id);
+          note.classList.add("on");
+          await sleep(500, id);
+          fix.textContent = fix.dataset.typed;
+          fix.classList.add("fixed");
+        }
+        await sleep(fix ? 2600 : 2000, id);
+        listen.classList.remove("on");
+        spans.forEach(s => s.classList.remove("in"));
+        note.classList.remove("on");
+        await sleep(350, id);
+      }
+      play();
+    }
+
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible && resume) { const r = resume; resume = null; r(); }
+    }).observe(stage);
+    play();
+  })();
+</script>
 </body>
 </html>

@@ -5,15 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SayType Privacy Policy</title>
 <link rel="icon" href="../icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-<main>
-  <nav class="top"><a class="home" href="../"><img src="../icon.png" alt="">SayType</a><a href="../support/">Support</a></nav>
+<nav class="top">
+  <a class="home" href="../"><img src="../icon.png" alt="" width="30" height="30">SayType</a>
+  <a href="../support/">Support</a>
+  <a href="../privacy/">Privacy</a>
+</nav>
+<main class="doc">
   <h1>Privacy Policy</h1>
-  <p>Last updated: September 27, 2026</p>
+  <p class="updated">Last updated: October 2, 2026</p>
 
-  <p><strong>Short version: SayType does not collect, store, or share your voice, your text, or what you do on your Mac.</strong> Speech recognition happens entirely on your Mac. The only data that leaves it is what's needed to activate your license and check for updates, described below.</p>
+  <p><strong>Short version: SayType does not collect, store, or share your voice, your text, or what you do on your Mac.</strong> Speech recognition happens entirely on your Mac. The only things SayType downloads are the speech and voice models, described below.</p>
 
   <h2>Your voice</h2>
   <p>While a text field has focus, SayType listens through your microphone and turns speech into text <strong>on your Mac</strong>, using a speech model stored on your computer. Audio is kept in memory only long enough to transcribe it, then discarded. It is never saved to disk and never sent to us or to anyone else.</p>
@@ -22,13 +29,12 @@
   <p>SayType uses the macOS Accessibility permission for two things only: to tell whether the focused element is a text field (and whether it's a password field, where SayType never listens), and to insert the text you dictated. It doesn't record your screen, log your keystrokes, or keep the contents of other apps. When you ask it to read text aloud, it reads your current selection once to speak it.</p>
 
   <h2>Your vocabulary and settings</h2>
-  <p>The words you teach SayType and your preferences are stored locally on your Mac, inside the app's container. They are never uploaded.</p>
+  <p>The words you teach SayType and your preferences are stored locally on your Mac, in SayType's folder in Library › Application Support. They are never uploaded.</p>
 
   <h2>Network use</h2>
   <ul>
     <li><strong>Model downloads.</strong> The first time you use a speech or voice model, SayType downloads it from Hugging Face (huggingface.co). As with any download, Hugging Face can see your IP address. No audio, text, or personal information is sent.</li>
-    <li><strong>License activation.</strong> When you enter a license key, SayType sends the key and your Mac's name to our payment provider, Lemon Squeezy, to activate it. About once a week it checks that the key is still valid. When you buy SayType, Lemon Squeezy processes your payment and email address under <a href="https://www.lemonsqueezy.com/privacy">its own privacy policy</a>. We only see what's needed to send your license and handle support.</li>
-    <li><strong>Update checks.</strong> About once a day SayType downloads a small update list from GitHub (github.io), and downloads new versions from GitHub when you update. GitHub can see your IP address. No personal information is sent.</li>
+    <li><strong>Installing and updating.</strong> SayType is installed and updated with Homebrew, which downloads it from GitHub (github.com). GitHub can see your IP address. SayType itself doesn't check for updates.</li>
     <li><strong>Optional local servers.</strong> If you choose to connect SayType to your own speech server, audio or text is sent only to the address you enter, which is normally a server running on your own Mac.</li>
   </ul>
   <p>SayType contains no analytics, advertising, tracking, or third-party SDKs that collect data. It has no accounts or sign-in.</p>
@@ -41,8 +47,9 @@
 
   <h2>Contact</h2>
   <p>Questions? <a href="https://github.com/frugoman/saytype-site/issues">Open an issue</a> or see <a href="../support/">Support</a>.</p>
-
-  <footer>© 2026 Nicolas Frugoni</footer>
 </main>
+<footer class="site-footer">
+  <span>Made by <a href="https://github.com/frugoman">@frugoman</a>. SayType is free; <a href="https://buymeacoffee.com/frugoman">buy me a coffee</a> if it helps.</span>
+</footer>
 </body>
 </html>

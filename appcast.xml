@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
-  <channel>
-    <title>SayType</title>
-    <link>https://frugoman.github.io/saytype-site/appcast.xml</link>
-    <language>en</language>
-<!--items-->
-  </channel>
-</rss>
