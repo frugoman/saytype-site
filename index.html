@@ -112,6 +112,29 @@
   .pair p { margin: 0 0 10px; color: var(--ink-2); font-size: 16.5px; }
 
   /* Feature cards */
+
+  .get { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin: 0 0 16px; }
+  .get .or { font-size: 15px; color: var(--ink-3); }
+  .free .get .or { color: color-mix(in srgb, var(--paper) 70%, var(--ink)); }
+  .btn.big { font-size: 17px; padding: 13px 22px; border-radius: 14px; }
+  .btn.paper { background: var(--paper); color: var(--ink); }
+  .btn.paper:hover { color: var(--ink); }
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  .compare { margin-top: 44px; overflow-x: auto; background: var(--sheet); border: 1px solid var(--rule); border-radius: 20px; box-shadow: var(--shadow); }
+  .compare table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 860px; font-size: 15px; }
+  .compare th, .compare td { padding: 12px 14px; text-align: center; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+  .compare thead th { font-size: 14px; font-weight: 700; color: var(--ink-2); position: sticky; top: 0; background: var(--sheet); }
+  .compare thead a { color: inherit; text-decoration: none; }
+  .compare thead a:hover { text-decoration: underline; }
+  .compare tbody th { text-align: left; font-weight: 600; color: var(--ink); position: sticky; left: 0; background: var(--sheet); min-width: 190px; }
+  .compare tr:last-child th, .compare tr:last-child td { border-bottom: 0; }
+  .compare td.y { color: var(--mint-ink); font-weight: 800; font-size: 17px; }
+  .compare td.n { color: var(--ink-3); }
+  .compare .us { color: var(--mint-ink); }
+  .compare td:nth-child(2), .compare thead th:nth-child(2) { background: color-mix(in srgb, var(--mint) 14%, var(--sheet)); font-weight: 700; }
+  .compare:focus-visible { outline-offset: 2px; }
+
   .features { list-style: none; padding: 0; margin: 48px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
   .features li { background: var(--sheet); border: 1px solid var(--rule); border-radius: 20px; padding: 24px 24px 26px; box-shadow: var(--shadow); }
   .features h3 { font-size: 19px; margin: 0 0 8px; font-weight: 700; font-variation-settings: "CASL" .6; line-height: 1.2; }
@@ -168,6 +191,7 @@
   <a class="home" href="./"><img src="icon.png" alt="" width="30" height="30">SayType</a>
   <a class="hide-sm" href="#how">How it works</a>
   <a class="hide-sm" href="#features">Features</a>
+  <a class="hide-sm" href="#compare">Compare</a>
   <a href="support/">Support</a>
   <a class="hide-sm" href="privacy/">Privacy</a>
 </nav>
@@ -177,11 +201,18 @@
     <div>
       <h1>Click a text field. Just talk.</h1>
       <p class="lede">SayType is dictation for your Mac with no key to hold. It listens while a text field has focus, and when you pause, your words are typed right where your cursor is. It all runs on your Mac.</p>
+      <div class="get">
+        <a class="btn mint big" href="https://github.com/frugoman/saytype/releases/latest/download/SayType.dmg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M4 20h16"/></svg>
+          Download for Mac
+        </a>
+        <span class="or">or install with Homebrew</span>
+      </div>
       <div class="install">
         <code id="brew">brew install --cask frugoman/tap/saytype</code>
         <button class="btn ink copy" type="button" data-copy="brew">Copy</button>
       </div>
-      <p class="fine">Free. No trial, no account, no subscription. macOS 14 or later, Apple silicon recommended.</p>
+      <p class="fine">Free and open source. No trial, no account, no subscription. Signed and notarized by Apple. macOS 14 or later, Apple silicon recommended.</p>
     </div>
 
     <div class="stage" role="img" aria-label="Animation: dictating into Slack, a git commit message and an email. While you talk a waveform pulses at the cursor; when you pause, the words are typed. In the commit, the misheard 'cube cuttle' is corrected to kubectl.">
@@ -251,9 +282,42 @@
       <li><h3>Edit by voice</h3><p>Select text, press <kbd>⌃⌥E</kbd> and say "make this shorter" or "translate to Spanish". Needs the AI cleanup backend.</p></li>
       <li><h3>About 30 languages</h3><p>Whisper and Parakeet v3 (25 European languages, very fast). Translate to English, or pick an output language.</p></li>
       <li><h3>Files and meetings</h3><p>Transcribe any audio or video file and export it as text, subtitles or Markdown. Record a meeting with a summary and action items.</p></li>
-      <li><h3>Automation</h3><p>A <code>saytype</code> command, <code>saytype://</code> links, Shortcuts actions and Raycast scripts.</p></li>
+      <li><h3>Automation</h3><p>A command-line tool you can rename to anything (<code>alfred toggle</code>), <code>saytype://</code> links, Shortcuts actions and Raycast scripts.</p></li>
+      <li><h3>A badge at your cursor</h3><p>A small mic follows the text cursor and shows what SayType is really doing, with a live level. It turns orange if the microphone stops delivering audio.</p></li>
+      <li><h3>Make it yours</h3><p>Pastel palettes, your own accent colour, light or dark, rounder or sharper corners, any font style. Animations switch off with Reduce Motion.</p></li>
+      <li><h3>Reads aloud, too</h3><p>Select text in any app and press <kbd>⌃⌥S</kbd>. Use a macOS voice or a natural on-device voice.</p></li>
     </ul>
     <p class="more">Setup for each is on the <a href="support/">support page</a>.</p>
+  </section>
+
+  <section id="compare">
+    <h2>How it compares.</h2>
+    <p class="sub">There are good dictation apps out there. Here is where SayType fits, and where it doesn't.</p>
+    <div class="compare" role="region" aria-label="Comparison table" tabindex="0">
+      <table>
+        <thead><tr><th scope="col"><span class="vh">Feature</span></th><th scope="col" class="us">SayType</th><th scope="col"><a href="https://github.com/cjpais/Handy">Handy</a></th><th scope="col"><a href="https://tryvoiceink.com">VoiceInk</a></th><th scope="col"><a href="https://superwhisper.com">Superwhisper</a></th><th scope="col"><a href="https://wisprflow.ai">Wispr Flow</a></th><th scope="col"><a href="https://spokenly.app">Spokenly</a></th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Price</th><td>Free</td><td>Free</td><td>$25 and up, once</td><td>Free tier, paid plans</td><td>Free tier, paid plan</td><td>Free local, Pro $9.99/mo</td></tr>
+          <tr><th scope="row">Open source</th><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td></tr>
+          <tr><th scope="row">Transcribes on your Mac</th><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td></tr>
+          <tr><th scope="row">Starts when you click a text field, no key</th><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td></tr>
+          <tr><th scope="row">Per-app profiles</th><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td></tr>
+          <tr><th scope="row">AI cleanup</th><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td></tr>
+          <tr><th scope="row">Snippets and replacements</th><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td></tr>
+          <tr><th scope="row">Meeting recording</th><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td></tr>
+          <tr><th scope="row">Audio and video file transcription</th><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td></tr>
+          <tr><th scope="row">Reads text aloud</th><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td></tr>
+          <tr><th scope="row">Command line, links or Shortcuts</th><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td><td class="n"><span aria-hidden="true">–</span><span class="vh">Not found on their site</span></td><td class="y"><span aria-hidden="true">✓</span><span class="vh">Yes</span></td></tr>
+          <tr><th scope="row">Languages</th><td>About 30</td><td>Not found</td><td>Not found</td><td>100+</td><td>100+</td><td>100+</td></tr>
+          <tr><th scope="row">Platforms</th><td>Mac</td><td>Mac, Windows, Linux</td><td>Mac, iPhone</td><td>Mac, Windows, iPhone, Android</td><td>Mac, Windows, iPhone, Android</td><td>Mac, Windows, Linux, iPhone</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fine">Taken from each app's own website and repository in October 2026. A dash means we didn't find it documented there, not that it's missing. Prices change. Found a mistake? <a href="https://github.com/frugoman/saytype/issues">Tell us</a> and we'll fix it.</p>
+    <div class="pair">
+      <div><h3>Pick SayType if</h3><p>You're on a Mac and want dictation that starts by itself, runs entirely on your Mac, costs nothing and has source you can read.</p></div>
+      <div><h3>Pick something else if</h3><p>You need Windows, Linux or a phone (Handy, Superwhisper, Wispr Flow, Spokenly), or more than about 30 languages (Superwhisper, Wispr Flow, Spokenly).</p></div>
+    </div>
   </section>
 
   <section id="privacy">
@@ -270,7 +334,11 @@
   <div class="free">
     <h2>Free. Really.</h2>
     <div>
-      <p>No trial, no pro tier, no licence key. Install it with Homebrew and update with <code>brew upgrade --cask saytype</code>. Homebrew also installs the <code>saytype</code> command for your terminal.</p>
+      <p>No trial, no pro tier, no licence key. Download the app, or install it with Homebrew and update with <code>brew upgrade --cask saytype</code>. Homebrew also installs the <code>saytype</code> command for your terminal.</p>
+      <div class="get">
+        <a class="btn paper big" href="https://github.com/frugoman/saytype/releases/latest/download/SayType.dmg">Download SayType.dmg</a>
+        <a class="or" href="https://github.com/frugoman/saytype/releases">All releases</a>
+      </div>
       <div class="install">
         <code id="brew2">brew install --cask frugoman/tap/saytype</code>
         <button class="btn ink copy" type="button" data-copy="brew2">Copy</button>
