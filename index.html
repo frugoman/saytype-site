@@ -63,13 +63,23 @@
              background: color-mix(in srgb, var(--mint) 28%, transparent); border-radius: 5px; padding: 0 3px; text-decoration: none; }
   .caret { display: inline-block; width: 3px; height: 1.15em; background: var(--mint); border-radius: 2px; vertical-align: -.2em; margin-left: 2px; animation: blink 1.05s steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
-  .voice { opacity: 0; transition: opacity .25s; display: inline-flex; align-items: center; gap: 3px; height: 1.2em; vertical-align: -.25em; margin-left: 10px; }
-  .voice.on { opacity: 1; }
-  .voice i { width: 4px; height: 3px; border-radius: 2px; background: var(--mint); transition: height .09s linear; display: block; }
-  .ring { width: 18px; height: 18px; vertical-align: -.2em; margin-left: 8px; opacity: 0; transition: opacity .2s; }
+  /* The badge that follows the cursor, as in the real app: ring swells with your voice, blue while typing. */
+  .badge { --c: var(--mint); --lvl: 0; display: inline-grid; place-items: center; position: relative; width: 28px; height: 28px; margin-left: 12px; vertical-align: -.5em;
+           border-radius: 50%; color: var(--mint-ink); background: color-mix(in srgb, var(--c) 16%, var(--sheet)); opacity: 0; transform: scale(.5);
+           transition: opacity .25s, transform .35s cubic-bezier(.3,1.7,.5,1), background .3s, color .3s; box-shadow: 0 8px 16px -8px rgba(5,3,40,.5); }
+  .badge.on { opacity: 1; transform: scale(1); }
+  .badge::before { content: ""; position: absolute; inset: -2px; border-radius: 50%; border: 2px solid var(--c); opacity: .55;
+                   transform: scale(calc(1 + var(--lvl) * .3)); transition: transform .09s linear, border-color .3s, opacity .3s; }
+  .badge.hearing::before { opacity: 1; }
+  .badge.work { --c: #4F8DFF; color: #2E63D8; }
+  .badge.work .mic { animation: bob .6s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(-2px); } }
+  .badge .mic { width: 14px; height: 14px; }
+  .badge .ring { position: absolute; inset: -4px; width: 36px; height: 36px; margin: 0; vertical-align: baseline; }
+  .ring { opacity: 0; transition: opacity .2s; }
   .ring.on { opacity: 1; }
-  .ring circle { fill: none; stroke-width: 3; }
-  .ring .track { stroke: var(--rule); }
+  .ring circle { fill: none; stroke-width: 1.6; }
+  .ring .track { stroke: transparent; }
   .ring .fill { stroke: var(--mint); stroke-dasharray: 44; stroke-dashoffset: 44; transform: rotate(-90deg); transform-origin: center; }
   .note { position: relative; z-index: 1; margin: 16px 2px 0; font-size: 14px; color: rgba(255,255,255,.8); min-height: 1.5em; opacity: 0; transition: opacity .4s; }
   .note.on { opacity: 1; }
@@ -157,6 +167,110 @@
   .free .btn.ink { background: var(--paper); color: var(--ink); }
   .coffee { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 15.5px; color: color-mix(in srgb, var(--paper) 70%, var(--ink)); }
 
+
+  /* Scroll reveals and small motion */
+  .rv { opacity: 0; transform: translateY(20px); transition: opacity .75s ease, transform .75s cubic-bezier(.2,.7,.2,1); transition-delay: calc(var(--i, 0) * 70ms); }
+  .rv.in { opacity: 1; transform: none; }
+  .hw { display: inline-block; opacity: 0; transform: translateY(.45em) rotate(2.5deg); animation: hw .8s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--i) * 90ms + 80ms); }
+  @keyframes hw { to { opacity: 1; transform: none; } }
+  .features li { transition: opacity .75s ease, transform .75s cubic-bezier(.2,.7,.2,1), translate .25s ease, box-shadow .25s ease; }
+  .features li:hover { translate: 0 -5px; box-shadow: 0 1px 0 rgba(22,19,43,.04), 0 30px 60px -26px rgba(43,33,168,.5); }
+
+  /* Badge states */
+  .states { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 6px; }
+  .states li { display: grid; grid-template-columns: 14px auto 1fr; gap: 12px; align-items: baseline; padding: 9px 14px; border-radius: 14px; border: 1px solid transparent; color: var(--ink-2); font-size: 16px; transition: background .3s, border-color .3s, transform .3s; }
+  .states li i { width: 10px; height: 10px; border-radius: 50%; background: var(--dot, var(--mint)); align-self: center; }
+  .states li b { color: var(--ink); font-weight: 650; }
+  .states li span { font-size: 15px; }
+  .states li.on { background: var(--sheet); border-color: var(--rule); box-shadow: var(--shadow); transform: translateX(6px); }
+  .states li[data-s="working"] { --dot: #4F8DFF; } .states li[data-s="paused"], .states li[data-s="off"] { --dot: #8C88A8; } .states li[data-s="problem"] { --dot: #FF8A3D; }
+  .bstage { background: var(--indigo); border-radius: 30px; padding: clamp(24px, 4vw, 44px); position: relative; overflow: hidden; color: #fff; }
+  .bstage::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 15% 85%, rgba(59,232,182,.16), transparent 45%); }
+  .bfield { position: relative; z-index: 1; background: var(--sheet); color: var(--ink); border-radius: 18px; padding: 16px 20px 26px; box-shadow: 0 30px 60px -25px rgba(5,3,40,.6); }
+  .bhead { display: flex; gap: 10px; font-size: 13.5px; color: var(--ink-3); border-bottom: 1px solid var(--rule); padding-bottom: 12px; margin-bottom: 18px; }
+  .bhead b { color: var(--ink); font-weight: 650; }
+  .bline { font-size: clamp(16px, 2vw, 22px); font-weight: 450; display: flex; align-items: center; flex-wrap: nowrap; min-height: 56px; }
+  .btxt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .bline .caret, .bline .badge { flex: none; }
+  .bcap { position: relative; z-index: 1; margin: 18px 2px 0; font-size: 14.5px; color: rgba(255,255,255,.85); min-height: 1.5em; }
+  .badge.big { width: 44px; height: 44px; margin-left: 14px; vertical-align: middle; }
+  .badge.big .mic { width: 20px; height: 20px; }
+  .badge.s-listening, .badge.s-hearing { --c: var(--mint); }
+  .badge.s-working { --c: #4F8DFF; color: #2E63D8; }
+  .badge.s-paused, .badge.s-off { --c: #8C88A8; color: #6A6686; }
+  .badge.s-problem { --c: #FF8A3D; color: #C8560F; }
+  .badge.s-hearing::before, .badge.s-problem::before, .badge.s-listening::before { opacity: 1; }
+  .badge.s-paused::before, .badge.s-off::before { opacity: .45; }
+  .badge.s-working .mic { animation: bob .6s ease-in-out infinite; }
+  .badge.s-problem { animation: shake .5s 1; }
+  @keyframes shake { 20% { transform: translateX(-3px); } 40% { transform: translateX(3px); } 60% { transform: translateX(-2px); } 80% { transform: translateX(2px); } }
+
+  /* Real screens */
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 36px 0 0; }
+  .tabs button { font: 650 15px var(--font); color: var(--ink-2); background: var(--sheet); border: 1px solid var(--rule); border-radius: 999px; padding: 8px 16px; cursor: pointer; transition: background .25s, color .25s, transform .2s, border-color .25s; }
+  .tabs button:hover { transform: translateY(-2px); }
+  .tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .showcase { position: relative; margin-top: 22px; padding-bottom: 40px; perspective: 1400px; }
+  .window { --rx: 0deg; --ry: 0deg; width: 86%; background: var(--sheet); border: 1px solid var(--rule); border-radius: 22px; overflow: hidden; box-shadow: 0 50px 90px -40px rgba(43,33,168,.55), var(--shadow);
+            transform: rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .25s ease-out; will-change: transform; }
+  .chrome { display: flex; align-items: center; gap: 7px; padding: 11px 16px; border-bottom: 1px solid var(--rule); font-size: 13px; color: var(--ink-3); }
+  .chrome i { width: 11px; height: 11px; border-radius: 50%; background: #FF5F57; }
+  .chrome i:nth-child(2) { background: #FEBC2E; } .chrome i:nth-child(3) { background: #28C840; }
+  .chrome span { margin: 0 auto; transform: translateX(-24px); }
+  .shots { position: relative; aspect-ratio: 1640 / 1280; }
+  .shot { position: absolute; inset: 0; opacity: 0; transform: scale(1.015); transition: opacity .5s ease, transform .6s cubic-bezier(.2,.7,.2,1); pointer-events: none; }
+  .shot.on { opacity: 1; transform: none; pointer-events: auto; }
+  .shot img { width: 100%; height: 100%; display: block; }
+  .popover { position: absolute; right: 0; bottom: 0; width: 25%; min-width: 150px; border-radius: 22px; overflow: hidden; box-shadow: 0 40px 70px -28px rgba(22,19,43,.6), 0 0 0 1px var(--rule); animation: float 6s ease-in-out infinite; background: var(--sheet); }
+  .popover img { width: 100%; height: auto; display: block; }
+  @keyframes float { 50% { transform: translateY(-10px) rotate(.6deg); } }
+
+  /* Make it yours */
+  .ctl { display: grid; grid-template-columns: 82px 1fr; gap: 14px; align-items: center; margin-top: 18px; font-size: 15px; color: var(--ink-3); }
+  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opts button { font: 650 14.5px var(--font); color: var(--ink); background: var(--sheet); border: 1px solid var(--rule); border-radius: 999px; padding: 7px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: transform .2s, border-color .2s, background .2s; }
+  .opts button:hover { transform: translateY(-2px); }
+  .opts button[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--ink) inset; }
+  .opts i { width: 14px; height: 14px; border-radius: 50%; margin-left: -4px; box-shadow: 0 0 0 1.5px var(--sheet); }
+  .opts.dots button { width: 32px; height: 32px; padding: 0; background: var(--d); border: 0; border-radius: 50%; }
+  .opts.dots button[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--d); transform: scale(1.08); }
+  .mock { --r: 1; --acc: #FF6B5E; --top: #FFF7FB; --bot: #F1F7FF; --card: rgba(255,255,255,.92); --mink: #2A2733; --s1: #FFD9E6; --s2: #D3EAFF; --s3: #D4F6E8; --s4: #E5DCFF;
+          display: grid; grid-template-columns: 38% 1fr; min-height: 340px; color: var(--mink); border-radius: calc(26px * var(--r)); overflow: hidden; box-shadow: 0 40px 80px -36px rgba(43,33,168,.5), 0 0 0 1px var(--rule);
+          background: linear-gradient(180deg, var(--top), var(--bot)); font-size: 15px; transition: background .5s, color .5s, border-radius .5s; }
+  .mock.dark { --top: #16131F; --bot: #1B1827; --card: rgba(38,34,50,.94); --mink: #F3F0FA; --s1: rgba(255,217,230,.24); --s2: rgba(211,234,255,.24); --s3: rgba(212,246,232,.24); --s4: rgba(229,220,255,.24); }
+  .mock * { transition: background .45s, color .45s, border-radius .45s, box-shadow .45s, border-color .45s; }
+  .mside { padding: 18px 14px; display: grid; gap: 4px; align-content: start; background: color-mix(in srgb, var(--card) 70%, transparent); border-right: 1px solid color-mix(in srgb, var(--mink) 8%, transparent); }
+  .mlogo { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 17px; margin: 0 4px 12px; }
+  .mlogo svg { color: var(--acc); }
+  .mrow { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: calc(13px * var(--r)); font-weight: 600; font-size: 14.5px; }
+  .mrow.on { background: var(--s1); }
+  .t { width: 24px; height: 24px; border-radius: calc(8px * var(--r)); display: block; }
+  .t1 { background: var(--s2); } .t2 { background: var(--s3); } .t3 { background: var(--s1); } .t4 { background: var(--acc); }
+  .mmain { padding: 22px; display: grid; align-content: center; }
+  .mcard { background: var(--card); border-radius: calc(22px * var(--r)); padding: 8px 16px; box-shadow: 0 14px 34px -18px rgba(107,91,149,.35), 0 0 0 1px color-mix(in srgb, var(--mink) 7%, transparent); }
+  .mline { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid color-mix(in srgb, var(--mink) 8%, transparent); font-weight: 550; }
+  .mline:last-child { border-bottom: 0; }
+  .msw { width: 40px; height: 24px; border-radius: 99px; background: color-mix(in srgb, var(--mink) 16%, transparent); position: relative; flex: none; }
+  .msw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .35s cubic-bezier(.3,1.5,.5,1); }
+  .msw.on { background: var(--acc); } .msw.on::after { transform: translateX(16px); }
+  .mseg { display: inline-flex; gap: 2px; padding: 3px; background: color-mix(in srgb, var(--mink) 8%, transparent); border-radius: 99px; font-size: 12.5px; }
+  .mseg u { text-decoration: none; padding: 3px 9px; border-radius: 99px; font-weight: 650; }
+  .mseg u.on { background: var(--acc); color: #fff; }
+  .mchip { background: var(--s3); color: color-mix(in srgb, var(--mink) 85%, #0B6B52); font-weight: 750; font-size: 12.5px; padding: 4px 10px; border-radius: 99px; }
+  .mbtn { background: var(--acc); color: #fff; font-weight: 700; font-size: 13.5px; padding: 7px 18px; border-radius: 99px; }
+
+  /* Video */
+  .video { margin-top: 36px; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--rule); background: #0F0D1F; }
+  .video video { width: 100%; height: auto; display: block; aspect-ratio: 16 / 9; }
+
+  @media (max-width: 920px) {
+    .window { width: 100%; } .popover { position: relative; width: 60%; margin: 18px 0 0 auto; }
+    .showcase { padding-bottom: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rv, .hw, .popover, .window, .shot, .states li, .badge.s-problem, .badge.s-working .mic { animation: none !important; transition: none !important; transform: none !important; opacity: 1; }
+  }
+
   @media (max-width: 920px) {
     .hero { grid-template-columns: minmax(0, 1fr); gap: 44px; padding-top: 20px; }
     .split, .free { grid-template-columns: minmax(0, 1fr); gap: 36px; }
@@ -181,7 +295,7 @@
     .features li { padding: 20px 20px 22px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .w, .listen, .note, .ring, .voice i { transition: none; animation: none; }
+    .w, .listen, .note, .ring, .badge, .badge::before { transition: none; animation: none; }
     .caret { animation: none; }
   }
 </style>
@@ -190,6 +304,7 @@
 <nav class="top">
   <a class="home" href="./"><img src="icon.png" alt="" width="30" height="30">SayType</a>
   <a class="hide-sm" href="#how">How it works</a>
+  <a class="hide-sm" href="#screens">Screens</a>
   <a class="hide-sm" href="#features">Features</a>
   <a class="hide-sm" href="#compare">Compare</a>
   <a href="support/">Support</a>
@@ -220,7 +335,7 @@
       <div class="scenes" aria-hidden="true"><span>Slack</span><span>Terminal</span><span>Mail</span></div>
       <div class="field" aria-hidden="true">
         <div class="field-head"><b class="app"></b><span class="where"></span><span class="listen">Listening</span></div>
-        <div class="line"><span class="words"></span><span class="caret"></span><span class="voice"></span><svg class="ring" viewBox="0 0 18 18"><circle class="track" cx="9" cy="9" r="7"/><circle class="fill" cx="9" cy="9" r="7"/></svg></div>
+        <div class="line"><span class="words"></span><span class="caret"></span><span class="badge" aria-hidden="true"><svg class="ring" viewBox="0 0 18 18"><circle class="track" cx="9" cy="9" r="7"/><circle class="fill" cx="9" cy="9" r="7"/></svg><svg class="mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></span></div>
       </div>
       <p class="note" aria-hidden="true"></p>
     </div>
@@ -235,6 +350,62 @@
       <li data-n="3"><h3>Pause</h3><p>After a short pause (0.8 s by default) the sentence is done.</p></li>
       <li data-n="4"><h3>It's typed</h3><p>Inserted directly. Your clipboard is left alone.</p></li>
     </ol>
+  </section>
+
+  <section id="badge">
+    <div class="split">
+      <div>
+        <h2>A badge that follows your cursor.</h2>
+        <p class="sub">A small mic sits next to the text cursor and shows what SayType is really doing, with a live level. If the microphone ever stops delivering audio, it turns orange, so you know before you start talking.</p>
+        <ul class="states" id="states">
+          <li data-s="listening"><i></i><b>Listening</b><span>Ready when you are</span></li>
+          <li data-s="hearing"><i></i><b>Hearing you</b><span>The ring swells with your voice</span></li>
+          <li data-s="working"><i></i><b>Typing</b><span>Turning speech into words</span></li>
+          <li data-s="paused"><i></i><b>Paused</b><span>Not listening right now</span></li>
+          <li data-s="off"><i></i><b>Off</b><span>Click it to turn dictation back on</span></li>
+          <li data-s="problem"><i></i><b>Mic problem</b><span>No audio is arriving</span></li>
+        </ul>
+      </div>
+      <div class="bstage" aria-hidden="true">
+        <div class="bfield">
+          <div class="bhead"><b>Notes</b><span>Untitled</span></div>
+          <div class="bline"><span class="btxt">Remind me to book flights</span><span class="caret"></span><span class="badge big on s-listening" id="bd"></span></div>
+        </div>
+        <p class="bcap" id="bcap">Listening</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="screens">
+    <h2>It looks like this.</h2>
+    <p class="sub">Calm pastel cards, a colour-coded sidebar and a menu-bar popover that tells you what it's doing. These are real screens, with sample data.</p>
+    <div class="tabs" role="tablist" aria-label="Settings screens" id="tabs">
+      <button role="tab" aria-selected="true" data-k="general">General</button>
+      <button role="tab" aria-selected="false" data-k="voice">Voice → Text</button>
+      <button role="tab" aria-selected="false" data-k="commands">Commands</button>
+      <button role="tab" aria-selected="false" data-k="apps">Apps</button>
+      <button role="tab" aria-selected="false" data-k="ai">AI</button>
+      <button role="tab" aria-selected="false" data-k="history">History</button>
+      <button role="tab" aria-selected="false" data-k="appearance">Appearance</button>
+    </div>
+    <div class="showcase" id="showcase">
+      <div class="window" id="win">
+        <div class="chrome"><i></i><i></i><i></i><span>SayType Settings</span></div>
+        <div class="shots">
+          <picture class="shot on" data-k="general"><source media="(prefers-color-scheme: dark)" srcset="assets/ui/general-dark.webp"><img src="assets/ui/general-light.webp" width="1640" height="1280"  alt="General settings: listening mode cards, shortcut keycaps and sliders."></picture>
+          <picture class="shot" data-k="voice"><source media="(prefers-color-scheme: dark)" srcset="assets/ui/voice-dark.webp"><img src="assets/ui/voice-light.webp" width="1640" height="1280" loading="lazy" alt="Voice to text settings: engine, language and model."></picture>
+          <picture class="shot" data-k="commands"><source media="(prefers-color-scheme: dark)" srcset="assets/ui/commands-dark.webp"><img src="assets/ui/commands-light.webp" width="1640" height="1280" loading="lazy" alt="Commands and snippets: voice command chips and saved snippets."></picture>
+          <picture class="shot" data-k="apps"><source media="(prefers-color-scheme: dark)" srcset="assets/ui/apps-dark.webp"><img src="assets/ui/apps-light.webp" width="1640" height="1280" loading="lazy" alt="Per-app profiles for Slack, Mail, Terminal and Xcode."></picture>
+          <picture class="shot" data-k="ai"><source media="(prefers-color-scheme: dark)" srcset="assets/ui/ai-dark.webp"><img src="assets/ui/ai-light.webp" width="1640" height="1280" loading="lazy" alt="AI settings: cleanup level, output language and where the AI runs."></picture>
+          <picture class="shot" data-k="history"><source media="(prefers-color-scheme: dark)" srcset="assets/ui/history-dark.webp"><img src="assets/ui/history-light.webp" width="1640" height="1280" loading="lazy" alt="Transcript history, searchable, with copy and type-again buttons."></picture>
+          <picture class="shot" data-k="appearance"><source media="(prefers-color-scheme: dark)" srcset="assets/ui/appearance-dark.webp"><img src="assets/ui/appearance-light.webp" width="1640" height="1280" loading="lazy" alt="Appearance: palettes, accent colours, corners and fonts."></picture>
+        </div>
+      </div>
+      <picture class="popover">
+        <source media="(prefers-color-scheme: dark)" srcset="assets/ui/menu-dark.webp">
+        <img src="assets/ui/menu-light.webp" width="640" height="1024" loading="lazy" alt="The SayType menu-bar popover: a green mic orb reading Ready when you are, recent dictations and the keyboard shortcuts.">
+      </picture>
+    </div>
   </section>
 
   <section>
@@ -271,6 +442,12 @@
     </div>
   </section>
 
+  <section id="watch">
+    <h2>Twenty seconds.</h2>
+    <p class="sub">The whole idea, start to finish.</p>
+    <div class="video"><video controls preload="none" playsinline poster="assets/launch-poster.jpg"><source src="assets/launch.mp4" type="video/mp4">Your browser can't play this video. <a href="assets/launch.mp4">Download it</a>.</video></div>
+  </section>
+
   <section id="features">
     <h2>Everything it does.</h2>
     <p class="sub">Hands-free is the default. Everything below is optional, and all of it runs on your Mac.</p>
@@ -289,6 +466,52 @@
       <li><h3>Reads aloud, too</h3><p>Select text in any app and press <kbd>⌃⌥S</kbd>. Use a macOS voice or a natural on-device voice.</p></li>
     </ul>
     <p class="more">Setup for each is on the <a href="support/">support page</a>.</p>
+  </section>
+
+  <section id="yours">
+    <div class="split">
+      <div>
+        <h2>Make it yours.</h2>
+        <p class="sub">Four palettes, any accent colour, light or dark, corners from crisp to bubbly. Try it on the right. It's all in Settings → Appearance.</p>
+        <div class="ctl"><span>Palette</span><div class="opts" data-ctl="palette">
+          <button data-v="candy" aria-pressed="true"><i style="background:#FFD9E6"></i><i style="background:#D3EAFF"></i><i style="background:#D4F6E8"></i>Candy</button>
+          <button data-v="ocean" aria-pressed="false"><i style="background:#F3DDF0"></i><i style="background:#C9E6FF"></i><i style="background:#C6F2EA"></i>Ocean</button>
+          <button data-v="sunset" aria-pressed="false"><i style="background:#FFCFD8"></i><i style="background:#FFE3D1"></i><i style="background:#FFF0C2"></i>Sunset</button>
+          <button data-v="cloud" aria-pressed="false"><i style="background:#ECE6F0"></i><i style="background:#E2EAF2"></i><i style="background:#E2EFEA"></i>Cloud</button>
+        </div></div>
+        <div class="ctl"><span>Accent</span><div class="opts dots" data-ctl="accent">
+          <button data-v="#FF6B5E" aria-pressed="true" style="--d:#FF6B5E" aria-label="Coral"></button>
+          <button data-v="#10C4B6" aria-pressed="false" style="--d:#10C4B6" aria-label="Turquoise"></button>
+          <button data-v="#FFBE0B" aria-pressed="false" style="--d:#FFBE0B" aria-label="Yellow"></button>
+          <button data-v="#8B5CF6" aria-pressed="false" style="--d:#8B5CF6" aria-label="Violet"></button>
+          <button data-v="#FF5C9D" aria-pressed="false" style="--d:#FF5C9D" aria-label="Pink"></button>
+          <button data-v="#3D7BFF" aria-pressed="false" style="--d:#3D7BFF" aria-label="Blue"></button>
+        </div></div>
+        <div class="ctl"><span>Corners</span><div class="opts" data-ctl="corners">
+          <button data-v="0.45" aria-pressed="false">Crisp</button><button data-v="1" aria-pressed="true">Soft</button><button data-v="1.5" aria-pressed="false">Bubbly</button>
+        </div></div>
+        <div class="ctl"><span>Mode</span><div class="opts" data-ctl="mode">
+          <button data-v="light" aria-pressed="true">Light</button><button data-v="dark" aria-pressed="false">Dark</button>
+        </div></div>
+      </div>
+      <div class="mock" id="mock" aria-hidden="true">
+        <div class="mside">
+          <b class="mlogo"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="11"/></svg>SayType</b>
+          <div class="mrow"><i class="t t1"></i>General</div>
+          <div class="mrow"><i class="t t2"></i>Voice → Text</div>
+          <div class="mrow"><i class="t t3"></i>AI</div>
+          <div class="mrow on"><i class="t t4"></i>Appearance</div>
+        </div>
+        <div class="mmain">
+          <div class="mcard">
+            <div class="mline"><span>Mic badge next to the cursor</span><span class="msw on"></span></div>
+            <div class="mline"><span>Play a sound when recording</span><span class="msw"></span></div>
+            <div class="mline"><span>Listen</span><span class="mseg"><u class="on">Hands-free</u><u>Push</u><u>Toggle</u></span></div>
+            <div class="mline"><span class="mchip">Listening</span><span class="mbtn">Save</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section id="compare">
@@ -383,10 +606,9 @@
     const tabs = [...stage.querySelectorAll(".scenes span")];
     const app = stage.querySelector(".app"), where = stage.querySelector(".where");
     const listen = stage.querySelector(".listen"), wordsEl = stage.querySelector(".words");
-    const voice = stage.querySelector(".voice"), ring = stage.querySelector(".ring"), ringFill = ring.querySelector(".fill");
+    const badge = stage.querySelector(".badge"), ring = stage.querySelector(".ring"), ringFill = ring.querySelector(".fill");
     const note = stage.querySelector(".note");
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const bars = Array.from({ length: 13 }, () => voice.appendChild(document.createElement("i")));
     let run = 0, visible = true, resume = null;
 
     const sleep = (ms, id) => new Promise(done => {
@@ -416,19 +638,18 @@
       });
     }
 
+    // The badge ring swells with the (pretend) voice level, like the real one does with your microphone.
     async function talk(ms, id) {
-      voice.classList.add("on");
+      badge.classList.add("hearing");
       const start = performance.now();
       while (performance.now() - start < ms) {
         const t = (performance.now() - start) / ms;
-        bars.forEach((bar, i) => {
-          const envelope = Math.sin(Math.PI * Math.min(1, t * 1.15)) * (0.55 + 0.45 * Math.sin(i * 0.9 + t * 30));
-          bar.style.height = Math.max(3, Math.round(4 + Math.random() * 18 * envelope)) + "px";
-        });
+        const envelope = Math.sin(Math.PI * Math.min(1, t * 1.15));
+        badge.style.setProperty("--lvl", (envelope * (0.35 + Math.random() * 0.65)).toFixed(2));
         await sleep(90, id);
       }
-      bars.forEach(bar => (bar.style.height = "3px"));
-      voice.classList.remove("on");
+      badge.style.setProperty("--lvl", 0);
+      badge.classList.remove("hearing");
     }
 
     async function play() {
@@ -436,26 +657,28 @@
       if (reduced) {
         const spans = show(scenes[1], 1);
         spans.forEach(s => { s.classList.add("in", "set"); if (s.dataset.typed) { s.textContent = s.dataset.typed; s.classList.add("fixed"); } });
-        listen.classList.add("on"); note.classList.add("on");
+        listen.classList.add("on"); badge.classList.add("on"); note.classList.add("on");
         return;
       }
       for (let i = 0; i < scenes.length; i++) {
         const scene = scenes[i];
         const spans = show(scene, i);
-        listen.classList.remove("on");
+        listen.classList.remove("on"); badge.classList.remove("on", "work");
         await sleep(600, id);
-        listen.classList.add("on");
+        listen.classList.add("on"); badge.classList.add("on");
         await sleep(450, id);
         await talk(scene.words.length * 240 + 500, id);
         ring.classList.add("on");
         ringFill.animate([{ strokeDashoffset: 44 }, { strokeDashoffset: 0 }], { duration: 800, fill: "forwards" });
         await sleep(850, id);
         ring.classList.remove("on");
+        badge.classList.add("work");
         for (const span of spans) {
           span.classList.add("in");
           requestAnimationFrame(() => setTimeout(() => span.classList.add("set"), 160));
           await sleep(95, id);
         }
+        badge.classList.remove("work");
         const fix = spans.find(s => s.dataset.typed);
         if (fix) {
           await sleep(700, id);
@@ -465,7 +688,7 @@
           fix.classList.add("fixed");
         }
         await sleep(fix ? 2600 : 2000, id);
-        listen.classList.remove("on");
+        listen.classList.remove("on"); badge.classList.remove("on", "work");
         spans.forEach(s => s.classList.remove("in"));
         note.classList.remove("on");
         await sleep(350, id);
@@ -478,6 +701,105 @@
       if (visible && resume) { const r = resume; resume = null; r(); }
     }).observe(stage);
     play();
+  })();
+</script>
+<script>
+  (() => {
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Hero headline: words rise in one by one.
+    const h1 = document.querySelector("h1");
+    if (h1 && !reduced) {
+      h1.innerHTML = h1.textContent.trim().split(/\s+/).map((w, i) => `<span class="hw" style="--i:${i}">${w}</span>`).join(" ");
+    }
+
+    // Everything else fades up as it scrolls into view.
+    if (!reduced && "IntersectionObserver" in window) {
+      const targets = document.querySelectorAll("section > h2, section > .sub, .split > div, .steps li, .features li, .pair > div, .private li, .compare, .tabs, .showcase, .video, .free");
+      const seen = new Map();
+      targets.forEach(el => {
+        const parent = el.parentElement;
+        const n = seen.get(parent) || 0; seen.set(parent, n + 1);
+        el.classList.add("rv"); el.style.setProperty("--i", Math.min(n, 8));
+      });
+      const io = new IntersectionObserver(entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      }), { threshold: .12, rootMargin: "0px 0px -6% 0px" });
+      targets.forEach(el => io.observe(el));
+    }
+
+    // The badge, cycling through everything it can say.
+    const bd = document.getElementById("bd");
+    if (bd) {
+      const icons = {
+        mic: '<svg class="mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>',
+        slash: '<svg class="mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M3 3l18 18"/></svg>',
+        warn: '<svg class="mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19z" fill="currentColor"/><path d="M12 10v4.5M12 17.5v.5" stroke="#fff"/></svg>',
+        dots: '<svg class="mic" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="19" cy="12" r="2.2"/></svg>',
+      };
+      const seq = [["listening", "Listening", "mic"], ["hearing", "Hearing you", "mic"], ["working", "Typing", "dots"], ["paused", "Paused", "mic"], ["off", "Off", "slash"], ["problem", "Mic problem: no audio is arriving", "warn"]];
+      const items = [...document.querySelectorAll("#states li")], cap = document.getElementById("bcap");
+      let i = -1, timer = null, level = null, visible = true;
+      const show = n => {
+        const [key, label, icon] = seq[n];
+        bd.className = "badge big on s-" + key; bd.innerHTML = icons[icon]; cap.textContent = label;
+        items.forEach(li => li.classList.toggle("on", li.dataset.s === key));
+        clearInterval(level); bd.style.setProperty("--lvl", 0);
+        if (key === "hearing" && !reduced) level = setInterval(() => bd.style.setProperty("--lvl", (Math.random() * .9 + .1).toFixed(2)), 110);
+      };
+      const next = () => { if (!visible) return; i = (i + 1) % seq.length; show(i); };
+      next();
+      if (!reduced) {
+        timer = setInterval(next, 2300);
+        new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(bd);
+      }
+      items.forEach((li, n) => li.addEventListener("click", () => { i = seq.findIndex(x => x[0] === li.dataset.s); show(i); }));
+    }
+
+    // Settings screens: tabs, and a gentle tilt that follows the pointer.
+    const tabs = document.getElementById("tabs"), win = document.getElementById("win"), showcase = document.getElementById("showcase");
+    if (tabs) {
+      tabs.addEventListener("click", e => {
+        const b = e.target.closest("button"); if (!b) return;
+        tabs.querySelectorAll("button").forEach(x => x.setAttribute("aria-selected", x === b));
+        document.querySelectorAll(".shot").forEach(sh => sh.classList.toggle("on", sh.dataset.k === b.dataset.k));
+      });
+      if (!reduced) {
+        showcase.addEventListener("pointermove", e => {
+          const r = showcase.getBoundingClientRect();
+          win.style.setProperty("--ry", (((e.clientX - r.left) / r.width - .5) * 5).toFixed(2) + "deg");
+          win.style.setProperty("--rx", (((e.clientY - r.top) / r.height - .5) * -4).toFixed(2) + "deg");
+        });
+        showcase.addEventListener("pointerleave", () => { win.style.setProperty("--rx", "0deg"); win.style.setProperty("--ry", "0deg"); });
+      }
+    }
+
+    // Make it yours: live theme demo.
+    const mock = document.getElementById("mock");
+    if (mock) {
+      const palettes = {
+        candy:  { top: "#FFF7FB", bot: "#F1F7FF", s: ["#FFD9E6", "#D3EAFF", "#D4F6E8", "#E5DCFF"] },
+        ocean:  { top: "#F1FAFF", bot: "#F0FBF7", s: ["#F3DDF0", "#C9E6FF", "#C6F2EA", "#D9DEFF"] },
+        sunset: { top: "#FFF6EE", bot: "#FFF0F4", s: ["#FFCFD8", "#FFE3D1", "#FFF0C2", "#F6D4F0"] },
+        cloud:  { top: "#F8F8FB", bot: "#F3F4F8", s: ["#ECE6F0", "#E2EAF2", "#E2EFEA", "#E8E4F3"] },
+      };
+      const darkTop = ["#16131F", "#1B1827"];
+      const state = { palette: "candy", accent: "#FF6B5E", corners: "1", mode: "light" };
+      const apply = () => {
+        const p = palettes[state.palette], dark = state.mode === "dark";
+        mock.classList.toggle("dark", dark);
+        const st = mock.style;
+        st.setProperty("--acc", state.accent); st.setProperty("--r", state.corners);
+        st.setProperty("--top", dark ? darkTop[0] : p.top); st.setProperty("--bot", dark ? darkTop[1] : p.bot);
+        p.s.forEach((c, i) => st.setProperty("--s" + (i + 1), dark ? c + "59" : c));
+      };
+      document.querySelectorAll("[data-ctl]").forEach(group => group.addEventListener("click", e => {
+        const b = e.target.closest("button"); if (!b) return;
+        group.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+        state[group.dataset.ctl] = b.dataset.v; apply();
+      }));
+      apply();
+    }
   })();
 </script>
 </body>
