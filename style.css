@@ -65,3 +65,4 @@ kbd { background: var(--sheet); border: 1px solid var(--rule); border-bottom-wid
 .doc td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); color: var(--ink-2); vertical-align: top; }
 .doc td:first-child { white-space: nowrap; }
 .doc code { overflow-wrap: anywhere; }
+.doc h3 { font-size: 18px; margin: 24px 0 4px; font-weight: 700; }
