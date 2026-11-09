@@ -4,7 +4,7 @@ Standard: `~/.claude/skills/frusoft-playbook/reference/seo.md`. Site: https://sa
 
 ## Scores (`seo-audit.mjs`)
 - Baseline (2026-11-09, live): **9/21**
-- After (local serve of this branch): **18/21**. Remaining 3 fails are N/A: no iOS app (apple-itunes-app, App Store link) and no `/es/` (hreflang).
+- After (live, 2026-11-09): **18/21**. Remaining 3 fails are N/A: no iOS app (apple-itunes-app, App Store link) and no `/es/` (hreflang).
 
 ## Decisions
 - **No `/es/`**: the site is English only today and the demand found is English. Revisit if Search Console shows Spanish queries ("dictado por voz mac", "dictar en mac sin internet").
