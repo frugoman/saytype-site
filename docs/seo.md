@@ -39,3 +39,9 @@ Head terms ("voice typing mac", "dictation app mac", "speech to text mac") are d
 3. Import the property into Bing Webmaster Tools.
 4. After ~4 weeks: `gsc-report.mjs opps` for saytype, then pick guide #3 and onward.
 5. Optional: link the guides from the app's README/GitHub description.
+
+## Analytics
+- GA4 measurement ID `G-934TD4YGFK` via `analytics.js` (unchanged copy of the playbook's `site-analytics.js`), loaded with `<script defer src="/analytics.js" data-mid=...>` on home, guides index, both guides, privacy, support and 404. Consent Mode v2 default denied, banner, DNT respected.
+- Mac app, no store link: layer 1 (App Store tokens) skipped. DMG links carry `data-cta="download"` so `cta_click` reports `cta_type: download`. JSON-LD `downloadUrl` left untagged.
+- No CSP on this site. Privacy page has a "Website analytics" paragraph (English only, site has no `/es/`).
+- Reading data: GA4 Events `guide_read`, `cta_click`; see the playbook's `reference/analytics.md`.
